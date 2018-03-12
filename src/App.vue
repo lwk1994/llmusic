@@ -11,6 +11,7 @@
 				</transition>
 			</keep-alive>
 			<player></player>
+			<lyc></lyc>
 		</div>
 
 	</div>
@@ -18,6 +19,7 @@
 
 <script>
 	import selectBar from '@/components/common/selectBar'
+	import lyc from '@/components/common/lyc'
 	import listening from '@/components/page/listening'
 	import rank from '@/components/page/rank'
 	import search from '@/components/page/search'
@@ -32,7 +34,8 @@
 			rank,
 			search,
 			listened,
-			player
+			player,
+			lyc
 		}
 	}
 </script>
@@ -65,6 +68,7 @@
 		height: calc(100% - 300px);
 		/*overflow-y: auto;*/
 		width: calc(100% - 370px);
+		float: left;
 	}
 	.listSection{
 		height: 100%;
@@ -163,5 +167,10 @@
 	.fade-leave-active {
 		opacity: 0;
 		transition: opacity .3s;
+	}
+	.lyc{
+		float: right;
+		width: 300px;
+		/*margin-top:20px;*/
 	}
 </style>

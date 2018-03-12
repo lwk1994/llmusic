@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 const state={
 	songURL:'',
-	rank:'ass',
+	rank:'',
 	rankID:'',
 	listID:'331258161',
 	listened:[],

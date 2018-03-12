@@ -172,6 +172,15 @@
 						console.log(this.$store.state.listened);
 
 					})
+					
+					//歌词
+					axios.get('http://localhost:3000/lyric?id='+this.listSection[index].id)
+					.then(response=>{
+						console.log(response);
+						var arr = response.data.lrc.lyric;
+						console.log(arr.split('br/'));
+						
+					})
 			}
 
 		},
