@@ -12,7 +12,9 @@ const state={
 	rankID:'',
 	listID:'331258161',
 	listened:[],
-	songBackground:'http://p1.music.126.net/GCJy3VguiVQIvzfTwResMg==/2535473813700425.jpg'
+	songBackground:'http://p1.music.126.net/GCJy3VguiVQIvzfTwResMg==/2535473813700425.jpg',
+	lrcObj:[],
+	lrcTime:[]
 }
 
 

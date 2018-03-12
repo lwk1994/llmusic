@@ -50,7 +50,8 @@
 				duration: [],
 				newList: [],
 				songURL: '',
-				screenHeight: document.body.clientHeight
+				screenHeight: document.body.clientHeight,
+				
 			}
 		},
 		created: function() {
@@ -70,11 +71,11 @@
 
 		},
 		mounted: function() {
-						
-//			window.onresize = function() {
-//				console.log('22')
-//					this.mainHeight();
-//				}
+
+			//			window.onresize = function() {
+			//				console.log('22')
+			//					this.mainHeight();
+			//				}
 
 		},
 		methods: {
@@ -127,7 +128,7 @@
 						//传入vuex
 						this.$store.state.songURL = response.data.data[0].url;
 						//获取已播放歌曲，传入vuex，添加到“我听过的”
-						console.log(response)
+//						console.log(response)
 
 					})
 				//添加到已播放歌曲中	
@@ -137,7 +138,7 @@
 						this.$store.state.songBackground = response.data.songs[0].al.picUrl;
 						//						console.log(this.$store.state.songBackground)
 						//						document.getElementsByClassName('back')[0].background = this.$store.state.songBackground;
-						console.log(this.$store.state.songBackground)
+//						console.log(this.$store.state.songBackground)
 						document.getElementsByTagName('body')[0].background = this.$store.state.songBackground;
 						//查找数组做出判断，如果已存在列表中。将就数据从“我听过的”数组中删除
 						for(var i = 0; i < this.$store.state.listened.length; i++) {
@@ -169,18 +170,66 @@
 							duration: songDuration
 						})
 
-						console.log(this.$store.state.listened);
+//						console.log(this.$store.state.listened);
+
+					})
+
+				//歌词
+				axios.get('http://localhost:3000/lyric?id=' + this.listSection[index].id)
+					.then(response => {
+						
+						this.$store.state.lrcObj=[];
+						console.log(response);
+						var str = response.data.lrc.lyric;
+						//						console.log(arr.split('\n'));
+						var lyrics = str.split("\n");
+//						var lrcObj = {};
+						for(var i = 0; i < lyrics.length; i++) {
+							var lyric = decodeURIComponent(lyrics[i]);
+							var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
+							var timeRegExpArr = lyric.match(timeReg);
+							if(!timeRegExpArr) continue;
+							var clause = lyric.replace(timeReg, '');
+							for(var k = 0, h = timeRegExpArr.length; k < h; k++) {
+								var t = timeRegExpArr[k];
+								var min = Number(String(t.match(/\[\d*/i)).slice(1)),
+									sec = Number(String(t.match(/\:\d*/i)).slice(1));
+								var time = min * 60 + sec;
+								if(clause !== '') {
+									this.$store.state.lrcObj.push({ time: time, text: clause })
+								}
+							}
+						}
+						console.log(this.$store.state.lrcObj);
 
 					})
 					
-					//歌词
-					axios.get('http://localhost:3000/lyric?id='+this.listSection[index].id)
-					.then(response=>{
-						console.log(response);
-						var arr = response.data.lrc.lyric;
-						console.log(arr.split('br/'));
+					//歌词滚动
+					
+//					for (var i = 0;i<this.$store.state.lrcObj.length;i++) {
+////						get歌词时间到数组
+//						 this.$store.state.lrcTime.push(this.$store.state.lrcObj[i].time)
+//						 console.log(this.$store.state.lrcObj[i].time)
+//						
+//					}
+//					console.log(this.$store.state.lrcTime);
+					var lrcIndex = 0;
+					var self  = this;
+					var timer;
+					var lycScroll = setInterval(function(){
+						 timer =  self.$store.state.lrcObj[lrcIndex].time;
+						 console.log(timer)
+						lrcIndex ++ ;
+						console.log(lrcIndex);
+						if (lrcIndex >self.$store.state.lrcObj.length ) {
+							console.log('已经停止');
+							return;
+							
+						} 
 						
-					})
+					},1000)
+					
+
 			}
 
 		},
@@ -191,5 +240,4 @@
 	* {
 		color: #fff;
 	}
-
 </style>

@@ -5,7 +5,9 @@
 		</div>
 		<div class="songLyc">
 			<ul>
-				<li></li>
+				<li v-for='item in this.$store.state.lrcObj'>
+					{{item.text}}
+				</li>
 			</ul>
 		</div>
 	</div>
@@ -23,13 +25,33 @@
 		components:{
 //			player
 			
+		},
+		mounted(){
+			//拿到时间
+			
 		}
 	}
 </script>
 
-<style>
+<style >
 	.songImg img{
 		width: 186px;
 		height: 186px;
+	}
+	.lyc{
+		height: 100%;
+	}
+	
+	.songLyc{
+		height: 390px;
+		overflow: hidden;
+	}
+	.songLyc ul{
+		padding: 0;
+		/*height: calc(100% - 300px);*/
+	}
+	.songLyc ul li{
+		height: 50px;
+		font-size: 16px;
 	}
 </style>
