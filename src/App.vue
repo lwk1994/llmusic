@@ -173,4 +173,7 @@
 		width: 300px;
 		/*margin-top:20px;*/
 	}
+	.songLyc{
+		
+	}
 </style>

@@ -4,7 +4,7 @@
 			<img :src= "this.$store.state.songBackground"/>
 		</div>
 		<div class="songLyc">
-			<ul>
+			<ul class="songLycUl">
 				<li v-for='item in this.$store.state.lrcObj'>
 					{{item.text}}
 				</li>
@@ -49,6 +49,10 @@
 	.songLyc ul{
 		padding: 0;
 		/*height: calc(100% - 300px);*/
+		position: relative;
+		margin-top: 200px;
+		-webkit-transition: 0.3s;
+		
 	}
 	.songLyc ul li{
 		height: 50px;

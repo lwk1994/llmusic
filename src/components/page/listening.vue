@@ -13,7 +13,7 @@
 
 				<ul>
 
-					<li v-for='(item,index) in newList' @click='playSong(index)'>
+					<li v-for='(item,index) in newList' @click='playSong(index) '>
 						<span class="songName">
 						{{item.songName}}
 					</span>
@@ -25,6 +25,7 @@
 					</span>
 
 					</li>
+					<button @click='stop()'></button>
 				</ul>
 			</div>
 
@@ -51,7 +52,7 @@
 				newList: [],
 				songURL: '',
 				screenHeight: document.body.clientHeight,
-				
+
 			}
 		},
 		created: function() {
@@ -119,7 +120,10 @@
 			},
 			//点击播放音乐
 			playSong: function(index) {
-
+				var a;
+				
+				console.log(a);
+				var lyci = 0;
 				//传值
 				axios.get('http://localhost:3000/music/url?id=' + this.listSection[index].id)
 					.then(response => {
@@ -128,7 +132,7 @@
 						//传入vuex
 						this.$store.state.songURL = response.data.data[0].url;
 						//获取已播放歌曲，传入vuex，添加到“我听过的”
-//						console.log(response)
+						//						console.log(response)
 
 					})
 				//添加到已播放歌曲中	
@@ -138,7 +142,7 @@
 						this.$store.state.songBackground = response.data.songs[0].al.picUrl;
 						//						console.log(this.$store.state.songBackground)
 						//						document.getElementsByClassName('back')[0].background = this.$store.state.songBackground;
-//						console.log(this.$store.state.songBackground)
+						//						console.log(this.$store.state.songBackground)
 						document.getElementsByTagName('body')[0].background = this.$store.state.songBackground;
 						//查找数组做出判断，如果已存在列表中。将就数据从“我听过的”数组中删除
 						for(var i = 0; i < this.$store.state.listened.length; i++) {
@@ -170,20 +174,22 @@
 							duration: songDuration
 						})
 
-//						console.log(this.$store.state.listened);
+						//						console.log(this.$store.state.listened);
 
 					})
 
 				//歌词
 				axios.get('http://localhost:3000/lyric?id=' + this.listSection[index].id)
 					.then(response => {
-						
-						this.$store.state.lrcObj=[];
+						//						clearTimeout(lycScroll);
+						var px = 0;
+						var lyci = 0;
+						this.$store.state.lrcObj = [];
 						console.log(response);
 						var str = response.data.lrc.lyric;
 						//						console.log(arr.split('\n'));
 						var lyrics = str.split("\n");
-//						var lrcObj = {};
+						//						var lrcObj = {};
 						for(var i = 0; i < lyrics.length; i++) {
 							var lyric = decodeURIComponent(lyrics[i]);
 							var timeReg = /\[\d*:\d*((\.|\:)\d*)*\]/g;
@@ -200,36 +206,45 @@
 								}
 							}
 						}
-						console.log(this.$store.state.lrcObj);
+
+						var self = this;
+
+						var t = function lycScroll() {
+							console.log('sss');
+							console.log(self.$store.state.lrcObj)
+
+							if(lyci > self.$store.state.lrcObj.length) {
+								//							clearTimeout(lycScroll);
+								console.log('已经停止');
+								lyci = 0;
+								clearTimeout(a)
+								return;
+
+							} else {
+								lyci++;
+
+								console.log(lyci)
+								px += 50;
+								//							return i;
+								document.getElementsByClassName('songLycUl')[0].style.bottom = px + 'px';
+								a = setTimeout(t, (self.$store.state.lrcObj[lyci].time - self.$store.state.lrcObj[lyci - 1].time) * 1000)
+
+							}
+
+							//							return lycScroll();
+						}
+						clearTimeout(a);
+						t();
+
+						//						console.log(this.$store.state.lrcObj);
 
 					})
-					
-					//歌词滚动
-					
-//					for (var i = 0;i<this.$store.state.lrcObj.length;i++) {
-////						get歌词时间到数组
-//						 this.$store.state.lrcTime.push(this.$store.state.lrcObj[i].time)
-//						 console.log(this.$store.state.lrcObj[i].time)
-//						
-//					}
-//					console.log(this.$store.state.lrcTime);
-					var lrcIndex = 0;
-					var self  = this;
-					var timer;
-					var lycScroll = setInterval(function(){
-						 timer =  self.$store.state.lrcObj[lrcIndex].time;
-						 console.log(timer)
-						lrcIndex ++ ;
-						console.log(lrcIndex);
-						if (lrcIndex >self.$store.state.lrcObj.length ) {
-							console.log('已经停止');
-							return;
-							
-						} 
-						
-					},1000)
-					
 
+				//歌词滚动
+
+			},
+			stop: function() {
+				clearTimeout(a);
 			}
 
 		},
